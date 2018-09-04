@@ -9,7 +9,7 @@ use Russofinn\Interactions\Models\Like;
 use Russofinn\Interactions\Models\View;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Config\Repository;
-use Spatie\Activitylog\Exceptions\CouldNotLogActivity;
+use Russofinn\Interactions\Exceptions\CouldNotInteraction;
 
 class Interactions
 {
@@ -105,7 +105,7 @@ class Interactions
             $comment->causer()->associate($this->causedBy);
         }
         $comment->reply_id = $this->reply;
-        $comment->text = $this->replacePlaceholders($text, $comment);
+        $comment->text = $text;
         $comment->save();
 
         return $comment;
@@ -154,7 +154,7 @@ class Interactions
     /**
      * @param \Illuminate\Database\Eloquent\Model|int|string $modelOrId
      *
-     * @throws \Spatie\Activitylog\Exceptions\CouldNotLogActivity
+     * @throws \Russofinn\Interactions\Exceptions\CouldNotInteraction
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
@@ -171,8 +171,7 @@ class Interactions
         if ($model) {
             return $model;
         }
-        throw CouldNotLogActivity::couldNotDetermineUser($modelOrId);
+        throw CouldNotInteraction::couldNotDetermineUser($modelOrId);
     }
-
 }
 

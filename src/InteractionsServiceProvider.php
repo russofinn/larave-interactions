@@ -41,10 +41,10 @@ class InteractionsServiceProvider extends ServiceProvider
     }
     public function register()
     {
-        $this->app->bind('command.intercations:clean', CleanInteractionsCommand::class);
+        /*$this->app->bind('command.intercations:clean', CleanInteractionsCommand::class);
         $this->commands([
             'command.intercations:clean',
-        ]);
+        ]);*/
         $this->app->bind(Interactions::class);
     }
 

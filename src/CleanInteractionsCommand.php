@@ -24,15 +24,21 @@ class CleanInteractionsCommand extends Command
     public function handle()
     {
         $this->comment('Cleaning activity log...');
+
         $log = $this->argument('log');
-        $maxAgeInDays = config('activitylog.delete_records_older_than_days');
+
+        $maxAgeInDays = config('intercations.delete_records_older_than_days');
+
         $cutOffDate = Carbon::now()->subDays($maxAgeInDays)->format('Y-m-d H:i:s');
-        $activity = ActivitylogServiceProvider::getActivityModelInstance();
+
+        $activity = InteractionsServiceProvider::getCommentModelInstance();
+
         $amountDeleted = $activity::where('created_at', '<', $cutOffDate)
             ->when($log !== null, function (Builder $query) use ($log) {
                 $query->inLog($log);
             })
             ->delete();
+
         $this->info("Deleted {$amountDeleted} record(s) from the activity log.");
         $this->comment('All done!');
     }
