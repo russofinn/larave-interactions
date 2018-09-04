@@ -14,10 +14,10 @@ class InteractionsServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/intercations.php' => config_path('intercations.php'),
+            __DIR__.'/../config/interactions.php' => config_path('interactions.php'),
         ], 'config');
 
-        $this->mergeConfigFrom(__DIR__.'/../config/intercations.php', 'intercations');
+        $this->mergeConfigFrom(__DIR__.'/../config/interactions.php', 'interactions');
 
         if (!class_exists('CreateCommentsTable')) {
             $timestamp = date('Y_m_d_His', time());
