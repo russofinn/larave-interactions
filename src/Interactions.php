@@ -112,7 +112,6 @@ class Interactions
     }
 
     /**
-     *
      * @return null|mixed
      */
     public function like()
@@ -132,7 +131,6 @@ class Interactions
     }
 
      /**
-     *
      * @return null|mixed
      */
     public function view()

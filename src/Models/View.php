@@ -37,13 +37,6 @@ class View extends Model
         return $this->morphTo();
     }
     
-    public function scopeInLog(Builder $query, ...$logNames): Builder
-    {
-        if (is_array($logNames[0])) {
-            $logNames = $logNames[0];
-        }
-        return $query->whereIn('log_name', $logNames);
-    }
     /**
      * Scope a query to only include activities by a given causer.
      *
