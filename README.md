@@ -30,7 +30,7 @@ If you've found a security issue please mail [freek@spatie.be](mailto:freek@spat
 You can install the package via composer:
 
 ``` bash
-composer require spatie/laravel-activitylog
+composer require russofinn/laravel-interactions
 ```
 
 The package will automatically register itself.
@@ -40,64 +40,81 @@ You can publish the migration with:
 php artisan vendor:publish --provider="Russofinn\Interactions\InteractionsServiceProvider" --tag="migrations"
 ```
 
-*Note*: The default migration assumes you are using integers for your model IDs. If you are using UUIDs, or some other format, adjust the format of the subject_id and causer_id fields in the published migration before continuing.
+*Nota*: O migrations padrão assume que você esteja usando números inteiros para seus IDs. Se você estiver usando UUIDs ou algum outro formato, ajuste o formato dos campos subject_id e causer_id nos migrations antes de continuar.
 
-After publishing the migration you can create the `activity_log` table by running the migrations:
+Depois de publicar os migrations, você pode criar as tabelas `comments`,`likes`,`views` e `mentions` executando o seguinte comando:
 
 
 ```bash
 php artisan migrate
 ```
 
-You can optionally publish the config file with:
+Você pode, opcionalmente, publicar o arquivo de configuração com:
 ```bash
 php artisan vendor:publish --provider="Russofinn\Interactions\InteractionsServiceProvider" --tag="config"
 ```
 
-This is the contents of the published config file:
+Este é o conteúdo do arquivo de configuração publicado:
 
 ```php
 return [
-
     /*
      * If set to false, no activities will be saved to the database.
      */
     'enabled' => env('ACTIVITY_LOGGER_ENABLED', true),
-
     /*
      * When the clean-command is executed, all recording activities older than
      * the number of days specified here will be deleted.
      */
     'delete_records_older_than_days' => 365,
-
     /*
      * If no log name is passed to the activity() helper
      * we use this default log name.
      */
     'default_log_name' => 'default',
-
     /*
      * You can specify an auth driver here that gets user models.
      * If this is null we'll use the default Laravel auth driver.
      */
     'default_auth_driver' => null,
-
     /*
      * If set to true, the subject returns soft deleted models.
      */
     'subject_returns_soft_deleted_models' => false,
 
+    'mentions' => [
+        'character' => '@',
+        'regex' => '/\s({character}{pattern}{rules})/',
+        'regex_replacement' => [
+            '{character}' => '@',
+            '{pattern}' => '[A-Za-z0-9]',
+            '{rules}' => '{4,20}'
+        ]
+        'model' => 'App\User',
+        'column' => 'username',
+        'route' => '/users/profile/@'
+    ],
+    'prefix_mention' => '@',
+    'search_mention_model' => 'App\User',
+    'search_mention_column' => 'username',
     /*
      * This model will be used to log activity. The only requirement is that
      * it should be or extend the Spatie\Activitylog\Models\Activity model.
      */
-    'activity_model' => \Spatie\Activitylog\Models\Activity::class,
-    
+    'comment_model' => \Russofinn\Interactions\Models\Comment::class,
+    'like_model' => \Russofinn\Interactions\Models\Like::class,
+    'view_model' => \Russofinn\Interactions\Models\View::class,
+    'mention_model' => \Russofinn\Interactions\Models\Mention::class,
+
     /*
      * This is the name of the table that will be created by the migration and
      * used by the Activity model shipped with this package.
      */
-    'table_name' => 'activity_log',
+    'table_name_comments' => 'comments',
+    'table_name_likes' => 'likes',
+    'table_name_views' => 'views',
+    'table_name_mentions' => 'mentions'
+
 ];
 
 ```
@@ -118,29 +135,13 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security
 
-If you discover any security related issues, please email freek@spatie.be instead of using the issue tracker.
-
-## Postcardware
-
-You're free to use this package, but if it makes it to your production environment we highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using.
-
-Our address is: Spatie, Samberstraat 69D, 2060 Antwerp, Belgium.
-
-We publish all received postcards [on our company website](https://spatie.be/en/opensource/postcards).
+Se você descobrir algum problema relacionado à segurança, envie um e-mail para almeida.weslley577@gmail.com em vez de abrir um ISSUE.
 
 ## Credits
 
-- [Freek Van der Herten](https://github.com/freekmurze)
-- [Sebastian De Deyne](https://github.com/sebastiandedeyne)
+- [Weslley Almeida](https://github.com/russofinn)
 - [All Contributors](../../contributors)
-
-## Support us
-
-Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
-
-Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie). 
-All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+Este pacote está diponibilizado sob MIT License (MIT). Leia [Arquivo de Licença](LICENSE.md) para maiores informações.

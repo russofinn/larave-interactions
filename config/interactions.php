@@ -24,6 +24,22 @@ return [
      * If set to true, the subject returns soft deleted models.
      */
     'subject_returns_soft_deleted_models' => false,
+
+    'mentions' => [
+        'character' => '@',
+        'regex' => '/\s({character}{pattern}{rules})/',
+        'regex_replacement' => [
+            '{character}' => '@',
+            '{pattern}' => '[A-Za-z0-9]',
+            '{rules}' => '{4,20}'
+        ]
+        'model' => 'App\User',
+        'column' => 'username',
+        'route' => '/users/profile/@'
+    ],
+    'prefix_mention' => '@',
+    'search_mention_model' => 'App\User',
+    'search_mention_column' => 'username',
     /*
      * This model will be used to log activity. The only requirement is that
      * it should be or extend the Spatie\Activitylog\Models\Activity model.
@@ -31,6 +47,8 @@ return [
     'comment_model' => \Russofinn\Interactions\Models\Comment::class,
     'like_model' => \Russofinn\Interactions\Models\Like::class,
     'view_model' => \Russofinn\Interactions\Models\View::class,
+    'mention_model' => \Russofinn\Interactions\Models\Mention::class,
+
     /*
      * This is the name of the table that will be created by the migration and
      * used by the Activity model shipped with this package.
@@ -38,5 +56,6 @@ return [
     'table_name_comments' => 'comments',
     'table_name_likes' => 'likes',
     'table_name_views' => 'views',
+    'table_name_mentions' => 'mentions'
 
 ];

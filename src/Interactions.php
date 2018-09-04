@@ -10,6 +10,7 @@ use Russofinn\Interactions\Models\View;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Config\Repository;
 use Russofinn\Interactions\Exceptions\CouldNotInteraction;
+use Illuminate\Support\Str;
 
 class Interactions
 {
@@ -170,6 +171,104 @@ class Interactions
             return $model;
         }
         throw CouldNotInteraction::couldNotDetermineUser($modelOrId);
+    }
+
+    protected function mentionPlaceholders($text): string 
+    {
+        if (is_null($input) || empty($input)) {
+            return $input;
+        }
+
+        $character = config('interactions.mentions.character');
+        $regex = strtr(config('interactions.mentions.regex'), config('interactions.mentions.regex_replacement'));
+
+        preg_match_all($regex, $text, $matches);
+
+        $matches = array_map([$this, 'mapper'], $matches[0]);
+
+        $matches = $this->removeNullKeys($matches);
+        $matches = $this->prepareArray($matches);
+        
+        $output = preg_replace_callback($matches, [$this, 'replace'], $input);
+
+        return $output;
+    }
+
+    /**
+     * Replace the mention with a markdown link.
+     *
+     * @param array $match The mention to replace.
+     *
+     * @return string
+     */
+    protected function replace(array $match): string
+    {
+        $character = config('interactions.mentions.character');
+
+        $mention = Str::title(str_replace($character, '', trim($match[0])));
+        $route = config('interactions.interactions.route');
+
+        $link = $route . $mention;
+
+        return " [{$character}{$mention}]($link)";
+    }
+
+    /**
+     * Prepare the array before calling the replace function.
+     *
+     * We basically order the array in alphabetic order, then we reverse it
+     * so it will match the largest name first, else it can remove
+     * `@admin2` if it match `@admin` first (based on the default regex).
+     *
+     * @param array $array The array to prepare
+     *
+     * @return array
+     */
+    protected function prepareArray(array $array): array
+    {
+        sort($array, SORT_STRING);
+        $array = array_reverse($array);
+        return $array;
+    }
+    /**
+     * Remove all `null` key in the given array.
+     *
+     * @param array $array The array where the filter should be applied.
+     *
+     * @return array
+     */
+    protected function removeNullKeys(array $array): array
+    {
+        return array_filter($array, function ($key) {
+            return ($key !== null);
+        });
+    }
+
+    /**
+     * Handle a mention and return it has a regex. If you want to delete
+     * this mention from the out array, just return `null`.
+     *
+     * @param string $key The mention that has been matched.
+     *
+     * @return null|string
+     */
+    protected function mapper(string $key)
+    {
+        $character = config('interactions.mentions.character');
+        $config = config('interactions.mentions');
+        
+        $mention = str_replace($character, '', trim($key));
+        $mentionned = $config['model']::whereRaw("LOWER({$config['column']}) = ?", [Str::lower($mention)])->first();
+        
+        if ($mentionned == false) {
+            return null;
+        }
+
+        if ($mentionned->getKey() !== Auth::id()) {
+            $this->model->mention($mentionned, $this->getOption('notify'));
+        }
+
+        return '/' . preg_quote($key) . '(?!\w)/';
     }
 }
 
