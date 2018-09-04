@@ -120,8 +120,7 @@ return [
 ```
 
 ## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information about recent changes.
+Acompanhe o [CHANGELOG](CHANGELOG.md) para maiores informações sobre as alterações recentes.
 
 ## Testing
 
