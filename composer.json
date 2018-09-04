@@ -30,7 +30,10 @@
     "autoload": {
         "psr-4": {
             "Russofinn\\Interactions\\": "src"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
