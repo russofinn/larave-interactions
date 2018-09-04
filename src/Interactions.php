@@ -83,8 +83,8 @@ class Interactions
     	if ($modelOrId === null) {
             return $this;
         }
-        $model = $this->normalizeCauser($modelOrId);
-        $this->reply = $model;
+
+        $this->reply = $modelOrId;
         return $this;
     }
 
