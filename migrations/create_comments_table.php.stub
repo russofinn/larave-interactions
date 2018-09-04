@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateCommentsTable extends Migration
+{
+	
+	/**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        Schema::create(config('interactions.table_name_comments'), function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('text');
+            $table->integer('reply_id')->nullable();
+            $table->integer('subject_id')->nullable();
+            $table->string('subject_type')->nullable();
+            $table->integer('causer_id')->nullable();
+            $table->string('causer_type')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::drop(config('interactions.table_name_comments'));
+    }
+}
