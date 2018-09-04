@@ -1,4 +1,4 @@
-# Log activity inside your Laravel app
+# Record user interactions within your Laravel application
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-activitylog.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
 [![Build Status](https://img.shields.io/travis/spatie/laravel-activitylog/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-activitylog)
@@ -6,65 +6,15 @@
 [![StyleCI](https://styleci.io/repos/61802818/shield)](https://styleci.io/repos/61802818)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-activitylog.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
 
-The `spatie/laravel-activitylog` package provides easy to use functions to log the activities of the users of your app. It can also automatically log model events. 
-The Package stores all activity in the `activity_log` table.
+O pacote `russofinn/laravel-interactions` fornece funções fáceis de usar para interações dos usuários em seu aplicativo
 
-Here's a demo of how you can use it:
-
-```php
-activity()->log('Look, I logged something');
-```
-
-You can retrieve all activity using the `Spatie\Activitylog\Models\Activity` model.
+Aqui está uma demonstração de como você pode usá-lo:
 
 ```php
-Activity::all();
+interactions()->comment('Look, I said something.');
 ```
 
-Here's a more advanced example:
-```php
-activity()
-   ->performedOn($anEloquentModel)
-   ->causedBy($user)
-   ->withProperties(['customProperty' => 'customValue'])
-   ->log('Look, I logged something');
-   
-$lastLoggedActivity = Activity::all()->last();
-
-$lastLoggedActivity->subject; //returns an instance of an eloquent model
-$lastLoggedActivity->causer; //returns an instance of your user model
-$lastLoggedActivity->getExtraProperty('customProperty'); //returns 'customValue'
-$lastLoggedActivity->description; //returns 'Look, I logged something'
-```
-
-
-Here's an example on [event logging](https://docs.spatie.be/laravel-activitylog/v2/advanced-usage/logging-model-events).
-
-```php
-$newsItem->name = 'updated name';
-$newsItem->save();
-
-//updating the newsItem will cause the logging of an activity
-$activity = Activity::all()->last();
-
-$activity->description; //returns 'updated'
-$activity->subject; //returns the instance of NewsItem that was created
-```
-
-Calling `$activity->changes()` will return this array:
-
-```php
-[
-   'attributes' => [
-        'name' => 'updated name',
-        'text' => 'Lorum',
-    ],
-    'old' => [
-        'name' => 'original name',
-        'text' => 'Lorum',
-    ],
-];
-```
+Você pode recuperar todas as interações usando o model `Russofinn\Interactions\Models\Comment`,`Russofinn\Interactions\Models\Like` e `Russofinn\Interactions\Models\View`.
 
 
 ## Documentation

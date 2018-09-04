@@ -1,6 +1,6 @@
 {
     "name": "russofinn/laravel-interactions",
-    "description": "A very simple activity logger to monitor the users of your website or application",
+    "description": "A very simple package to record user interactions on your website or application.",
     "keywords":
     [
         "interactions",
@@ -13,7 +13,6 @@
         {
             "name": "Weslley Almeida",
             "email": "almeida.weslley577@gmail.com",
-            "homepage": "https://spatie.be",
             "role": "Developer"
         }
     ],
