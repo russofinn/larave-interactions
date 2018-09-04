@@ -1,8 +1,8 @@
 <?php
-namespace Spatie\Activitylog\Exceptions;
+
+namespace Russofinn\Interactions\Exceptions;
 
 use Exception;
-use Spatie\Activitylog\Models\Activity;
 
 class InvalidConfiguration extends Exception
 {

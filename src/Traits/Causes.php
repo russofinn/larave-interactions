@@ -1,4 +1,5 @@
 <?php
+
 namespace Russofinn\Interactions\Traits;
 
 use Russofinn\Interactions\InteractionsServiceProvider;

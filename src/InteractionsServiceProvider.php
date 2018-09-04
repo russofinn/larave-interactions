@@ -1,4 +1,5 @@
 <?php
+
 namespace Russofinn\Interactions;
 
 use Illuminate\Database\Eloquent\Model;
@@ -41,10 +42,6 @@ class InteractionsServiceProvider extends ServiceProvider
     }
     public function register()
     {
-        /*$this->app->bind('command.intercations:clean', CleanInteractionsCommand::class);
-        $this->commands([
-            'command.intercations:clean',
-        ]);*/
         $this->app->bind(Interactions::class);
     }
 

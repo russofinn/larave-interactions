@@ -1,4 +1,5 @@
 <?php
+
 namespace Russofinn\Interactions\Models;
 
 use Illuminate\Support\Collection;
