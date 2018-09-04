@@ -33,7 +33,7 @@ class Interactions
     /** @var string */
     protected $authDriver;
 
-    public function __construct(AuthManager $auth, Repository $config, ActivityLogStatus $logStatus)
+    public function __construct(AuthManager $auth, Repository $config)
     {
         $this->auth = $auth;
         $this->properties = collect();
