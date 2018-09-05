@@ -132,10 +132,28 @@ class Interactions
         return $like;
     }
 
-     /**
+    /**
      * @return null|mixed
      */
     public function view()
+    {
+        $view = InteractionsServiceProvider::getViewModelInstance();
+        if ($this->performedOn) {
+            $view->subject()->associate($this->performedOn);
+        }
+
+        if ($this->causedBy) {
+            $view->causer()->associate($this->causedBy);
+        }
+        $view->save();
+
+        return $view;
+    }
+
+    /**
+     * @return null|mixed
+     */
+    public function mention()
     {
         $view = InteractionsServiceProvider::getViewModelInstance();
         if ($this->performedOn) {
