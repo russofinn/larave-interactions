@@ -1,4 +1,4 @@
-# Registre as interações do usuário em seu aplicativo Laravel
+# Interações do usuário em seu aplicativo Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-activitylog.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-activitylog)
 [![Build Status](https://img.shields.io/travis/spatie/laravel-activitylog/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-activitylog)
@@ -14,11 +14,11 @@ Aqui está uma demonstração de como você pode usá-lo:
 interactions()->comment('Look, I said something.');
 ```
 
-Você pode recuperar todas as interações usando o model `Russofinn\Interactions\Models\Comment`,`Russofinn\Interactions\Models\Like` e `Russofinn\Interactions\Models\View`.
+Você pode recuperar todas as interações usando o model `Russofinn\Interactions\Models\Comment`,`Russofinn\Interactions\Models\Like`, `Russofinn\Interactions\Models\View` e `Russofinn\Interactions\Models\Mention`.
 
 
 ## Documentation
-You'll find the documentation on [https://docs.spatie.be/laravel-activitylog/v2](https://docs.spatie.be/laravel-activitylog/v2).
+Você encontrará a documentação sobre [https://docs.spatie.be/laravel-activitylog/v2](https://docs.spatie.be/laravel-activitylog/v2).
 
 Find yourself stuck using the package? Found a bug? Do you have general questions or suggestions for improving the activity log? Feel free to [create an issue on GitHub](https://github.com/spatie/laravel-activitylog/issues), we'll try to address it as soon as possible.
 
@@ -27,15 +27,15 @@ If you've found a security issue please mail [freek@spatie.be](mailto:freek@spat
 
 ## Installation
 
-You can install the package via composer:
+Você pode instalar o pacote via composer
 
 ``` bash
 composer require russofinn/laravel-interactions
 ```
 
-The package will automatically register itself.
+O pacote será registrado automaticamente.
 
-You can publish the migration with:
+Você pode publicar os migrations com:
 ```bash
 php artisan vendor:publish --provider="Russofinn\Interactions\InteractionsServiceProvider" --tag="migrations"
 ```
@@ -125,6 +125,12 @@ return [
      * used by the Comment model shipped with this package.
      */
     'table_name_comments' => 'comments',
+
+    /*
+     * This is the name of the table that will be created by the migration and
+     * used by the View model shipped with this package.
+     */
+    'table_name_mentions' => 'mentions'
 
     /*
      * This is the name of the table that will be created by the migration and
