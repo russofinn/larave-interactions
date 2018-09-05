@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateViewsTable extends Migration
+{
+	
+	/**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        Schema::create(config('interactions.table_name_mentions'), function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('subject_id')->nullable();
+            $table->string('subject_type')->nullable();
+            $table->integer('causer_id')->nullable();
+            $table->string('causer_type')->nullable();
+            $table->text('indices')->nullable(); // [17,45]
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::drop(config('interactions.table_name_views'));
+    }
+}

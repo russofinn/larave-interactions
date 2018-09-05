@@ -96,6 +96,7 @@ class Interactions
      */
     public function comment(string $text)
     {
+        $mentions = config('interactions.enabled_mentions');
 
         $comment = InteractionsServiceProvider::getCommentModelInstance();
         if ($this->performedOn) {
@@ -106,7 +107,7 @@ class Interactions
             $comment->causer()->associate($this->causedBy);
         }
         $comment->reply_id = $this->reply;
-        $comment->text = $text;
+        $comment->text = !$mentions ? $text : $this->mentionPlaceholders($text);
         $comment->save();
 
         return $comment;
@@ -136,7 +137,6 @@ class Interactions
      */
     public function view()
     {
-
         $view = InteractionsServiceProvider::getViewModelInstance();
         if ($this->performedOn) {
             $view->subject()->associate($this->performedOn);
@@ -162,21 +162,24 @@ class Interactions
         if ($modelOrId instanceof Model) {
             return $modelOrId;
         }
+
         if (starts_with(app()->version(), '5.1')) {
             $model = $this->auth->driver($this->authDriver)->getProvider()->retrieveById($modelOrId);
         } else {
             $model = $this->auth->guard($this->authDriver)->getProvider()->retrieveById($modelOrId);
         }
+
         if ($model) {
             return $model;
         }
+
         throw CouldNotInteraction::couldNotDetermineUser($modelOrId);
     }
 
     protected function mentionPlaceholders($text): string 
     {
-        if (is_null($input) || empty($input)) {
-            return $input;
+        if (is_null($text) || empty($text)) {
+            return $text;
         }
 
         $character = config('interactions.mentions.character');
@@ -189,7 +192,7 @@ class Interactions
         $matches = $this->removeNullKeys($matches);
         $matches = $this->prepareArray($matches);
         
-        $output = preg_replace_callback($matches, [$this, 'replace'], $input);
+        $output = preg_replace_callback($matches, [$this, 'replace'], $text);
 
         return $output;
     }
@@ -206,9 +209,15 @@ class Interactions
         $character = config('interactions.mentions.character');
 
         $mention = Str::title(str_replace($character, '', trim($match[0])));
-        $route = config('interactions.interactions.route');
+        $route = config('interactions.mentions.route');
 
         $link = $route . $mention;
+
+        $markdown = config('interactions.mentions.markdown');
+
+        if(!$markdown){
+            return " <a class=\"link\" href=\"{$link} \">{$character}{$mention}</a>";
+        }
 
         return " [{$character}{$mention}]($link)";
     }
@@ -228,6 +237,7 @@ class Interactions
     {
         sort($array, SORT_STRING);
         $array = array_reverse($array);
+
         return $array;
     }
     /**
@@ -264,9 +274,9 @@ class Interactions
             return null;
         }
 
-        if ($mentionned->getKey() !== Auth::id()) {
-            $this->model->mention($mentionned, $this->getOption('notify'));
-        }
+        //if ($mentionned->getKey() !== Auth::id()) {
+            //$this->model->mention($mentionned, $this->getOption('notify'));
+        //}
 
         return '/' . preg_quote($key) . '(?!\w)/';
     }
