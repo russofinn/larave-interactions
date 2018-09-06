@@ -4,10 +4,10 @@ namespace Russofinn\Interactions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use Russofinn\Interactions\Exceptions\InvalidConfiguration;
 use Russofinn\Interactions\Models\Comment;
 use Russofinn\Interactions\Models\Like;
 use Russofinn\Interactions\Models\View;
-use Russofinn\Interactions\Exceptions\InvalidConfiguration;
 
 class InteractionsServiceProvider extends ServiceProvider
 {
@@ -40,6 +40,7 @@ class InteractionsServiceProvider extends ServiceProvider
             ], 'migrations');
         }
     }
+
     public function register()
     {
         $this->app->bind(Interactions::class);
@@ -48,45 +49,51 @@ class InteractionsServiceProvider extends ServiceProvider
     public static function determineCommentModel(): string
     {
         $commentModel = config('intercations.comment_model') ?? Comment::class;
-        if (! is_a($commentModel, Comment::class, true)) {
-            throw InvalidConfiguration::modelIsNotValid($commentModel,Comment::class);
+        if (!is_a($commentModel, Comment::class, true)) {
+            throw InvalidConfiguration::modelIsNotValid($commentModel, Comment::class);
         }
+
         return $commentModel;
     }
 
     public static function determineLikeModel(): string
     {
         $likeModel = config('intercations.like_model') ?? Like::class;
-        if (! is_a($likeModel, Like::class, true)) {
-            throw InvalidConfiguration::modelIsNotValid($likeModel,Like::class);
+        if (!is_a($likeModel, Like::class, true)) {
+            throw InvalidConfiguration::modelIsNotValid($likeModel, Like::class);
         }
+
         return $likeModel;
     }
 
     public static function determineViewModel(): string
     {
         $viewModel = config('intercations.view_model') ?? View::class;
-        if (! is_a($viewModel, View::class, true)) {
-            throw InvalidConfiguration::modelIsNotValid($viewModel,View::class);
+        if (!is_a($viewModel, View::class, true)) {
+            throw InvalidConfiguration::modelIsNotValid($viewModel, View::class);
         }
+
         return $viewModel;
     }
 
     public static function getCommentModelInstance(): Model
     {
         $commentModelClassName = self::determineCommentModel();
+
         return new $commentModelClassName();
     }
 
     public static function getLikeModelInstance(): Model
     {
         $likeModelClassName = self::determineLikeModel();
+
         return new $likeModelClassName();
     }
 
     public static function getViewModelInstance(): Model
     {
         $viewModelClassName = self::determineViewModel();
+
         return new $viewModelClassName();
     }
 }

@@ -21,7 +21,7 @@ class CleanInteractionsCommand extends Command
      * @var string
      */
     protected $description = 'Clean up old records from the activity log.';
-    
+
     public function handle()
     {
         $this->comment('Cleaning activity log...');
