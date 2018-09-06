@@ -3,20 +3,20 @@
 namespace Russofinn\Interactions;
 
 use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
+use Russofinn\Interactions\Exceptions\CouldNotInteraction;
 use Russofinn\Interactions\Models\Comment;
 use Russofinn\Interactions\Models\Like;
 use Russofinn\Interactions\Models\View;
-use Illuminate\Support\Traits\Macroable;
-use Illuminate\Contracts\Config\Repository;
-use Russofinn\Interactions\Exceptions\CouldNotInteraction;
-use Illuminate\Support\Str;
 
 class Interactions
 {
-	use Macroable;
+    use Macroable;
 
-	/** @var \Illuminate\Auth\AuthManager */
+    /** @var \Illuminate\Auth\AuthManager */
     protected $auth;
 
     /** @var \Illuminate\Database\Eloquent\Model */
@@ -71,6 +71,7 @@ class Interactions
         }
         $model = $this->normalizeCauser($modelOrId);
         $this->causedBy = $model;
+
         return $this;
     }
 
@@ -79,13 +80,14 @@ class Interactions
         return $this->causedBy($modelOrId);
     }
 
-    public function reply($modelOrId) 
+    public function reply($modelOrId)
     {
-    	if ($modelOrId === null) {
+        if ($modelOrId === null) {
             return $this;
         }
 
         $this->reply = $modelOrId;
+
         return $this;
     }
 
@@ -118,7 +120,6 @@ class Interactions
      */
     public function like()
     {
-
         $like = InteractionsServiceProvider::getLikeModelInstance();
         if ($this->performedOn) {
             $like->subject()->associate($this->performedOn);
@@ -194,7 +195,7 @@ class Interactions
         throw CouldNotInteraction::couldNotDetermineUser($modelOrId);
     }
 
-    protected function mentionPlaceholders($text): string 
+    protected function mentionPlaceholders($text): string
     {
         if (is_null($text) || empty($text)) {
             return $text;
@@ -209,7 +210,7 @@ class Interactions
 
         $matches = $this->removeNullKeys($matches);
         $matches = $this->prepareArray($matches);
-        
+
         $output = preg_replace_callback($matches, [$this, 'replace'], $text);
 
         return $output;
@@ -229,11 +230,11 @@ class Interactions
         $mention = Str::title(str_replace($character, '', trim($match[0])));
         $route = config('interactions.mentions.route');
 
-        $link = $route . $mention;
+        $link = $route.$mention;
 
         $markdown = config('interactions.mentions.markdown');
 
-        if(!$markdown){
+        if (!$markdown) {
             return " <a class=\"link\" href=\"{$link} \">{$character}{$mention}</a>";
         }
 
@@ -258,6 +259,7 @@ class Interactions
 
         return $array;
     }
+
     /**
      * Remove all `null` key in the given array.
      *
@@ -268,7 +270,7 @@ class Interactions
     protected function removeNullKeys(array $array): array
     {
         return array_filter($array, function ($key) {
-            return ($key !== null);
+            return $key !== null;
         });
     }
 
@@ -284,19 +286,18 @@ class Interactions
     {
         $character = config('interactions.mentions.character');
         $config = config('interactions.mentions');
-        
+
         $mention = str_replace($character, '', trim($key));
         $mentionned = $config['model']::whereRaw("LOWER({$config['column']}) = ?", [Str::lower($mention)])->first();
-        
+
         if ($mentionned == false) {
-            return null;
+            return;
         }
 
         //if ($mentionned->getKey() !== Auth::id()) {
-            //$this->model->mention($mentionned, $this->getOption('notify'));
+        //$this->model->mention($mentionned, $this->getOption('notify'));
         //}
 
-        return '/' . preg_quote($key) . '(?!\w)/';
+        return '/'.preg_quote($key).'(?!\w)/';
     }
 }
-

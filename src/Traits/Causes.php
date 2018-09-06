@@ -2,8 +2,8 @@
 
 namespace Russofinn\Interactions\Traits;
 
-use Russofinn\Interactions\InteractionsServiceProvider;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Russofinn\Interactions\InteractionsServiceProvider;
 
 trait Causes
 {
@@ -21,5 +21,4 @@ trait Causes
     {
         return $this->morphMany(InteractionsServiceProvider::determineViewModel(), 'causer');
     }
-   
 }

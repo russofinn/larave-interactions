@@ -20,12 +20,12 @@ return [
         /*
          * If set to true, the subject returns soft deleted models.
          */
-        'character' => '@',
-        'regex' => '/\s({character}{pattern}{rules})/',
+        'character'         => '@',
+        'regex'             => '/\s({character}{pattern}{rules})/',
         'regex_replacement' => [
             '{character}' => '@',
-            '{pattern}' => '[A-Za-z0-9]',
-            '{rules}' => '{4,20}'
+            '{pattern}'   => '[A-Za-z0-9]',
+            '{rules}'     => '{4,20}',
         ],
 
         /*
@@ -43,7 +43,7 @@ return [
          */
         'route' => '/users/profile/@',
 
-        'markdown' => true
+        'markdown' => true,
     ],
 
     /*
@@ -92,5 +92,5 @@ return [
      * This is the name of the table that will be created by the migration and
      * used by the View model shipped with this package.
      */
-    'table_name_views' => 'views'
+    'table_name_views' => 'views',
 ];
